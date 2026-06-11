@@ -1,0 +1,53 @@
+# https://taskfile.dev
+# harmoni — core library build tools.
+
+version: '3'
+
+vars:
+  PKGS: ./...
+
+tasks:
+  build:
+    desc: Build all harmoni packages
+    cmds:
+      - go build {{.PKGS}}
+
+  test:
+    desc: Run tests with race detector
+    cmds:
+      - go test -race -count=1 -coverprofile=coverage.out {{.PKGS}}
+
+  coverage:
+    desc: Run tests and report coverage
+    cmds:
+      - go test -race -count=1 -coverprofile=coverage.out {{.PKGS}}
+      - go tool cover -func=coverage.out | grep total
+
+  lint:
+    desc: Lint all packages
+    cmds:
+      - golangci-lint run {{.PKGS}}
+
+  fuzz:
+    desc: Run fuzz tests (30s per package)
+    cmds:
+      - go test -fuzz=. -fuzztime=30s {{.PKGS}}
+
+  bench:
+    desc: Run benchmarks
+    cmds:
+      - go test -bench=. -benchtime=1s -count=5 {{.PKGS}}
+
+  tidy:
+    desc: Tidy module
+    cmds:
+      - go mod tidy
+      - go mod tidy -diff
+
+  ci:
+    desc: Full CI pipeline
+    cmds:
+      - task: lint
+      - task: test
+      - task: coverage
+      - task: tidy
