@@ -7,6 +7,8 @@
 Zero-dependency Go library providing the core interfaces, types, and patterns for
 building type-safe microservices with Go 1.23+ generics.
 
+> Inspired by [go-kit/kit](https://github.com/go-kit/kit)
+
 ## Packages
 
 | Package | Purpose |
