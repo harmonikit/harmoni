@@ -14,11 +14,10 @@ package log
 type Level int
 
 const (
-	// Log levels in order of increasing severity.
-	LevelDebug Level = iota
-	LevelInfo
-	LevelWarn
-	LevelError
+	LevelDebug Level = iota // Debug messages for development
+	LevelInfo               // Informational messages
+	LevelWarn               // Warning messages
+	LevelError              // Error messages
 )
 
 // String returns the level as a human-readable string.
