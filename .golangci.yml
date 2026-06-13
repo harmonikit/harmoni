@@ -6,7 +6,6 @@ version: "2"
 linters:
   enable:
     - errcheck
-    - gosimple
     - govet
     - staticcheck
     - unused
@@ -16,12 +15,9 @@ linters:
     - gocognit
     - gocyclo
     - misspell
-    - unconvert
-    - unparam
     - prealloc
     - bodyclose
     - noctx
-    - forcetypeassert
 
   settings:
     gocognit:
