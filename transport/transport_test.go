@@ -14,7 +14,7 @@ import (
 
 // Compile-time interface assertions.
 var (
-	_ transport.Server              = (*mockServer)(nil)
+	_ transport.Server                = (*mockServer)(nil)
 	_ transport.Codec[string, string] = (*stringCodec)(nil)
 )
 
