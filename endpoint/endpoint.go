@@ -29,7 +29,7 @@ func Chain[Req, Resp any](outer Middleware[Req, Resp], rest ...Middleware[Req, R
 // Nop returns an Endpoint that does nothing — it returns the zero value of Resp
 // and nil error. Useful as a placeholder or for testing middleware chains.
 func Nop[Req, Resp any]() Endpoint[Req, Resp] {
-	return func(ctx context.Context, req Req) (Resp, error) {
+	return func(_ context.Context, _ Req) (Resp, error) {
 		var zero Resp
 		return zero, nil
 	}

@@ -16,7 +16,7 @@ func ExampleSetAuth() {
 	// Output: ok=true user=user-42
 }
 
-func ExampleAuthMiddleware() {
+func ExampleMiddleware() {
 	type request struct{ Token string }
 
 	// A simple token auth.

@@ -17,8 +17,8 @@ func ExampleService() {
 	// Output: user-service
 }
 
-func ExampleServiceMiddleware() {
-	loggingMW := service.ServiceMiddleware(func(s service.Service) service.Service {
+func ExampleMiddleware() {
+	loggingMW := service.Middleware(func(s service.Service) service.Service {
 		fmt.Printf("initializing service: %s\n", s.Name())
 		return s
 	})

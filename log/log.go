@@ -14,6 +14,7 @@ package log
 type Level int
 
 const (
+	// Log levels in order of increasing severity.
 	LevelDebug Level = iota
 	LevelInfo
 	LevelWarn

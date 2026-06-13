@@ -9,9 +9,9 @@ func NewNopLogger() Logger {
 }
 
 // Log discards the log message.
-func (n *NopLogger) Log(level Level, msg string, keysAndValues ...any) {}
+func (n *NopLogger) Log(_ Level, _ string, _ ...any) {}
 
 // With returns the same NopLogger (no allocation).
-func (n *NopLogger) With(keysAndValues ...any) Logger {
+func (n *NopLogger) With(_ ...any) Logger {
 	return n
 }

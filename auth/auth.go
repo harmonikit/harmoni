@@ -8,7 +8,7 @@
 //	    ctx = auth.SetAuth(ctx, &User{ID: "123"})
 //	    return ctx, nil
 //	}
-//	ep = auth.AuthMiddleware[MyRequest, MyResponse](&myAuth{})(ep)
+//	ep = auth.Middleware[MyRequest, MyResponse](&myAuth{})(ep)
 package auth
 
 import (
@@ -25,10 +25,10 @@ type Auth[Req any] interface {
 	Authenticate(ctx context.Context, req Req) (context.Context, error)
 }
 
-// AuthMiddleware returns an endpoint middleware that authenticates requests
+// Middleware returns an endpoint middleware that authenticates requests
 // before passing them to the endpoint. If authentication fails, the endpoint
 // is not called and the error is returned.
-func AuthMiddleware[Req, Resp any](a Auth[Req]) endpoint.Middleware[Req, Resp] {
+func Middleware[Req, Resp any](a Auth[Req]) endpoint.Middleware[Req, Resp] {
 	return func(next endpoint.Endpoint[Req, Resp]) endpoint.Endpoint[Req, Resp] {
 		return func(ctx context.Context, req Req) (Resp, error) {
 			authCtx, err := a.Authenticate(ctx, req)

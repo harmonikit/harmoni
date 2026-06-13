@@ -69,7 +69,7 @@ func TestClearAuth(t *testing.T) {
 
 func TestAuthMiddleware_Success(t *testing.T) {
 	ta := &testAuth{user: "alice"}
-	mw := auth.AuthMiddleware[int, string](ta)
+	mw := auth.Middleware[int, string](ta)
 
 	ep := endpoint.Endpoint[int, string](func(ctx context.Context, req int) (string, error) {
 		v, ok := auth.GetAuth(ctx)
@@ -92,7 +92,7 @@ func TestAuthMiddleware_Success(t *testing.T) {
 func TestAuthMiddleware_Error(t *testing.T) {
 	wantErr := errors.New("unauthorized")
 	ta := &testAuth{err: wantErr}
-	mw := auth.AuthMiddleware[int, string](ta)
+	mw := auth.Middleware[int, string](ta)
 
 	called := false
 	ep := endpoint.Endpoint[int, string](func(ctx context.Context, req int) (string, error) {
@@ -114,7 +114,7 @@ func TestAuthMiddleware_PreservesContext(t *testing.T) {
 	// Verify that the auth middleware doesn't lose existing context values.
 	ctx := context.WithValue(context.Background(), contextKey("existing"), "value")
 	ta := &testAuth{user: "bob"}
-	mw := auth.AuthMiddleware[int, string](ta)
+	mw := auth.Middleware[int, string](ta)
 
 	ep := endpoint.Endpoint[int, string](func(ctx context.Context, req int) (string, error) {
 		// Both the existing value and the auth value should be present.

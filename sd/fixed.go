@@ -14,7 +14,7 @@ func NewFixedInstancer(instances ...string) *FixedInstancer {
 }
 
 // Discover returns the fixed set of instances.
-func (f *FixedInstancer) Discover(ctx context.Context) ([]string, error) {
+func (f *FixedInstancer) Discover(_ context.Context) ([]string, error) {
 	result := make([]string, len(f.instances))
 	copy(result, f.instances)
 	return result, nil

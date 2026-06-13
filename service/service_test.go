@@ -25,7 +25,7 @@ func TestService_Name(t *testing.T) {
 }
 
 func TestServiceMiddleware_Identity(t *testing.T) {
-	identity := service.ServiceMiddleware(func(s service.Service) service.Service {
+	identity := service.Middleware(func(s service.Service) service.Service {
 		return s
 	})
 
@@ -39,7 +39,7 @@ func TestServiceMiddleware_Identity(t *testing.T) {
 
 func TestServiceMiddleware_Transform(t *testing.T) {
 	// Middleware that prefixes the service name.
-	prefixMW := service.ServiceMiddleware(func(s service.Service) service.Service {
+	prefixMW := service.Middleware(func(s service.Service) service.Service {
 		// Return a new service with a prefixed name.
 		return &prefixedService{inner: s, prefix: "v2."}
 	})

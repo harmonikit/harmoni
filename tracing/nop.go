@@ -9,7 +9,7 @@ type NopSpan struct{}
 func (NopSpan) End() {}
 
 // SetAttributes is a no-op.
-func (NopSpan) SetAttributes(attrs ...any) {}
+func (NopSpan) SetAttributes(_ ...any) {}
 
 // NopTracer is a no-op tracer that creates NopSpans.
 type NopTracer[Req, Resp any] struct{}
@@ -20,9 +20,9 @@ func NewNopTracer[Req, Resp any]() *NopTracer[Req, Resp] {
 }
 
 // Start returns the unchanged context and a NopSpan.
-func (t *NopTracer[Req, Resp]) Start(ctx context.Context, operationName string, req Req) (context.Context, Span) {
+func (t *NopTracer[Req, Resp]) Start(ctx context.Context, _ string, _ Req) (context.Context, Span) {
 	return ctx, NopSpan{}
 }
 
 // End is a no-op.
-func (t *NopTracer[Req, Resp]) End(ctx context.Context, span Span, resp Resp, err error) {}
+func (t *NopTracer[Req, Resp]) End(_ context.Context, _ Span, _ Resp, _ error) {}

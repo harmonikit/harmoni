@@ -12,7 +12,7 @@ type Service interface {
 	Name() string
 }
 
-// ServiceMiddleware wraps a Service to add cross-cutting behavior at the
+// Middleware wraps a Service to add cross-cutting behavior at the
 // service level. For RPC-level middleware (auth, rate limiting, tracing),
 // use endpoint.Middleware instead.
-type ServiceMiddleware func(Service) Service
+type Middleware func(Service) Service

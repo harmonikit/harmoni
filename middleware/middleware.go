@@ -37,16 +37,16 @@ func Timeout[Req, Resp any](d time.Duration) endpoint.Middleware[Req, Resp] {
 	}
 }
 
-// Retry returns a middleware that retries the endpoint on error, up to max
-// attempts. The backoff function receives the attempt number (0-based) and
-// returns the duration to wait before the next attempt.
+// Retry returns a middleware that retries the endpoint on error, up to
+// attempts retries (not including the initial call). The backoff function
+// receives the attempt number (0-based) and returns the duration to wait
+// before the next attempt.
 //
-// If max <= 0, Retry delegates to the next endpoint without retries.
-func Retry[Req, Resp any](max int, backoff func(attempt int) time.Duration) endpoint.Middleware[Req, Resp] {
+// If attempts <= 0, Retry delegates to the next endpoint without retries.
+func Retry[Req, Resp any](attempts int, backoff func(attempt int) time.Duration) endpoint.Middleware[Req, Resp] {
 	return func(next endpoint.Endpoint[Req, Resp]) endpoint.Endpoint[Req, Resp] {
 		return func(ctx context.Context, req Req) (resp Resp, err error) {
-			for attempt := 0; attempt <= max; attempt++ {
-				// Check context before each attempt.
+			for attempt := 0; attempt <= attempts; attempt++ {
 				if ctx.Err() != nil {
 					return resp, ctx.Err()
 				}
@@ -56,8 +56,7 @@ func Retry[Req, Resp any](max int, backoff func(attempt int) time.Duration) endp
 					return resp, nil
 				}
 
-				// Don't sleep after the last attempt.
-				if attempt < max {
+				if attempt < attempts {
 					if err := sleep(ctx, backoff(attempt)); err != nil {
 						return resp, err
 					}

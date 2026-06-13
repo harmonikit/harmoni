@@ -45,7 +45,7 @@ func (tb *TokenBucket) Allow() bool {
 	}
 
 	if tb.tokens >= 1 {
-		tb.tokens -= 1
+		tb.tokens--
 		return true
 	}
 	return false

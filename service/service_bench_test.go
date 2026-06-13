@@ -14,7 +14,7 @@ func BenchmarkService_Name(b *testing.B) {
 }
 
 func BenchmarkServiceMiddleware(b *testing.B) {
-	identity := service.ServiceMiddleware(func(s service.Service) service.Service {
+	identity := service.Middleware(func(s service.Service) service.Service {
 		return s
 	})
 	svc := &testService{name: "bench-svc"}
