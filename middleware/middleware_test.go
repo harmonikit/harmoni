@@ -48,7 +48,6 @@ func TestTimeout_Exceeded(t *testing.T) {
 
 func TestTimeout_SetsDeadline(t *testing.T) {
 	ep := endpoint.Endpoint[int, int](func(ctx context.Context, req int) (int, error) {
-		// Verify the context has a deadline set.
 		if _, ok := ctx.Deadline(); !ok {
 			t.Error("context should have a deadline")
 		}
@@ -66,8 +65,6 @@ func TestTimeout_SetsDeadline(t *testing.T) {
 }
 
 func TestTimeout_ExpiredContext(t *testing.T) {
-	// When the parent context is already cancelled, the middleware
-	// should return the context error without calling the endpoint.
 	called := false
 	ep := endpoint.Endpoint[int, int](func(ctx context.Context, req int) (int, error) {
 		called = true
@@ -149,7 +146,6 @@ func TestRetry_AllFailed(t *testing.T) {
 	if !errors.Is(err, wantErr) {
 		t.Fatalf("got error %v, want %v", err, wantErr)
 	}
-	// 4 total: 1 initial + 3 retries.
 	if attempts != 4 {
 		t.Fatalf("got %d attempts, want 4", attempts)
 	}
@@ -171,6 +167,52 @@ func TestRetry_ZeroMax(t *testing.T) {
 	}
 	if attempts != 1 {
 		t.Fatalf("got %d attempts, want 1", attempts)
+	}
+}
+
+func TestRetry_NegativeMax(t *testing.T) {
+	// Negative max means no attempts at all — returns zero values.
+	var called bool
+	ep := endpoint.Endpoint[int, int](func(ctx context.Context, req int) (int, error) {
+		called = true
+		return req, nil
+	})
+
+	backoff := func(attempt int) time.Duration { return 0 }
+	wrapped := middleware.Retry[int, int](-1, backoff)(ep)
+
+	resp, err := wrapped(context.Background(), 41)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp != 0 {
+		t.Fatalf("got %d, want 0 (zero value)", resp)
+	}
+	if called {
+		t.Fatal("endpoint should not have been called with negative max")
+	}
+}
+
+func TestRetry_ZeroBackoff(t *testing.T) {
+	// Zero backoff — no sleep between retries, just immediate retry.
+	var attempts int
+	ep := endpoint.Endpoint[int, int](func(ctx context.Context, req int) (int, error) {
+		attempts++
+		if attempts < 3 {
+			return 0, errors.New("fail")
+		}
+		return req, nil
+	})
+
+	backoff := func(attempt int) time.Duration { return 0 }
+	wrapped := middleware.Retry[int, int](5, backoff)(ep)
+
+	resp, err := wrapped(context.Background(), 42)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp != 42 {
+		t.Fatalf("got %d, want 42", resp)
 	}
 }
 
@@ -277,7 +319,10 @@ func TestRecovery_StructType(t *testing.T) {
 
 func TestRecovery_StructPanic_ZeroResp(t *testing.T) {
 	type Req struct{ Name string }
-	type Resp struct{ ID int; Name string }
+	type Resp struct {
+		ID   int
+		Name string
+	}
 
 	ep := endpoint.Endpoint[Req, Resp](func(ctx context.Context, req Req) (Resp, error) {
 		panic("boom")

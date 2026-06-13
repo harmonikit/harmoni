@@ -141,6 +141,13 @@ func TestNopLogger_With_ReturnsNop(t *testing.T) {
 	}
 }
 
+func TestNopLogger_Log_Direct(t *testing.T) {
+	// Direct call (not via interface) to ensure coverage.
+	nop := &harmonilog.NopLogger{}
+	nop.Log(harmonilog.LevelInfo, "ignored", "key", "value")
+	nop.Log(harmonilog.LevelDebug, "also ignored")
+}
+
 func TestLogger_Interface(t *testing.T) {
 	// Compile-time check: SlogLogger implements Logger.
 	var _ harmonilog.Logger = harmonilog.NewSlogLogger(slog.Default())
