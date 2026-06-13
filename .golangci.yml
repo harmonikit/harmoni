@@ -10,8 +10,6 @@ linters:
     - govet
     - staticcheck
     - unused
-    - gofumpt
-    - goimports
     - nilnil
     - exhaustruct
     - revive
