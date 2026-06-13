@@ -13,6 +13,7 @@ package log
 // Level represents the severity of a log message.
 type Level int
 
+// Log levels ordered by increasing severity.
 const (
 	LevelDebug Level = iota // Debug messages for development
 	LevelInfo               // Informational messages
