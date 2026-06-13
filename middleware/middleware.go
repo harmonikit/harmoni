@@ -58,13 +58,8 @@ func Retry[Req, Resp any](max int, backoff func(attempt int) time.Duration) endp
 
 				// Don't sleep after the last attempt.
 				if attempt < max {
-					d := backoff(attempt)
-					if d > 0 {
-						select {
-						case <-ctx.Done():
-							return resp, ctx.Err()
-						case <-time.After(d):
-						}
+					if err := sleep(ctx, backoff(attempt)); err != nil {
+						return resp, err
 					}
 				}
 			}
@@ -95,4 +90,18 @@ func Recovery[Req, Resp any]() endpoint.Middleware[Req, Resp] {
 func zero[T any]() T {
 	var z T
 	return z
+}
+
+// sleep waits for d duration or until ctx is done. Returns ctx.Err() if
+// the context is cancelled, nil otherwise.
+func sleep(ctx context.Context, d time.Duration) error {
+	if d <= 0 {
+		return nil
+	}
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(d):
+		return nil
+	}
 }

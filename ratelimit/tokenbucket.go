@@ -20,6 +20,7 @@ type TokenBucket struct {
 // and burst (maximum tokens). The bucket starts full.
 func NewTokenBucket(rate float64, burst float64) *TokenBucket {
 	return &TokenBucket{
+		mu:       sync.Mutex{},
 		rate:     rate,
 		burst:    burst,
 		tokens:   burst,

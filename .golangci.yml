@@ -37,8 +37,8 @@ linters:
         - name: errorf
         - name: exported
           arguments:
-            - checkPrivateReceivers: true
-            - sayRepetitiveInsteadOfStutters: true
+            - check-private-receivers
+            - say-repetitive-instead-of-stutters
         - name: increment-decrement
         - name: indent-error-flow
         - name: package-comments
