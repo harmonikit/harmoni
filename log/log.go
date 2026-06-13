@@ -7,7 +7,7 @@
 // Example:
 //
 //	logger := log.NewSlogLogger(slog.Default())
-//	logger.Info("request processed", "method", "GET", "duration", 12*time.Millisecond)
+//	logger.Log(harmonilog.LevelInfo, "request", "method", "GET", "duration", 12*time.Millisecond)
 package log
 
 // Level represents the severity of a log message.
@@ -15,10 +15,10 @@ type Level int
 
 // Log levels ordered by increasing severity.
 const (
-	LevelDebug Level = iota // Debug messages for development
-	LevelInfo               // Informational messages
-	LevelWarn               // Warning messages
-	LevelError              // Error messages
+	LevelDebug Level = iota
+	LevelInfo
+	LevelWarn
+	LevelError
 )
 
 // String returns the level as a human-readable string.
